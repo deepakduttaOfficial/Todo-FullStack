@@ -16,9 +16,9 @@ import AuthInput from "../../components/input/AuthInput";
 import AuthButton from "../../components/button/AuthButton";
 // error animation -- React toastify
 import { toast, ToastContainer } from "react-toastify";
-import { signupErrorHandaler } from "../errorHandaler/auth";
-import Navbar from "../../components/navbar";
-import { isAuthenticate, signup } from "../apiHelper/auth";
+import { signupErrorHandaler } from "../../errorHandaler/auth";
+import { isAuthenticate, signup } from "../../apiHelper/auth";
+import Topbar from "../../components/navbar/Topbar";
 
 const Signup = () => {
   const [value, setValue] = useState({
@@ -78,7 +78,7 @@ const Signup = () => {
   return (
     <>
       {navigatePerformed()}
-      <Navbar />
+      <Topbar />
       <ToastContainer />
       <Container mt={10}>
         <VStack

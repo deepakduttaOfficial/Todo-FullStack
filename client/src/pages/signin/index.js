@@ -14,12 +14,12 @@ import { SiGnuprivacyguard } from "react-icons/si";
 // Custom file import
 import AuthInput from "../../components/input/AuthInput";
 import AuthButton from "../../components/button/AuthButton";
-import Navbar from "../../components/navbar";
 // error animation -- React toastify
-import { signupErrorHandaler } from "../errorHandaler/auth";
+import { signupErrorHandaler } from "../../errorHandaler/auth";
 import { ToastContainer, toast } from "react-toastify";
 // Api helper-------------??
-import { authenticate, isAuthenticate, signin } from "../apiHelper/auth";
+import { authenticate, isAuthenticate, signin } from "../../apiHelper/auth";
+import Topbar from "../../components/navbar/Topbar";
 
 const Signin = () => {
   const [value, setValue] = useState({
@@ -77,7 +77,7 @@ const Signin = () => {
     <>
       {navigatePerformed()}
       <ToastContainer />
-      <Navbar />
+      <Topbar />
       <Container mt={10}>
         <VStack
           border={"1px"}

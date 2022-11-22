@@ -10,15 +10,16 @@ import { NavLink } from "react-router-dom";
 
 import { FcTodoList } from "react-icons/fc";
 
-const Todocard = ({ todo, date, task = 0 }) => {
+const Todocard = ({ todo, date, task = 0, todoId }) => {
   const textColoe = useColorModeValue("gray.500", "gray.400");
   return (
     <LinkBox
       _hover={{ bgColor: useColorModeValue("gray.300", "gray.800") }}
       px={5}
       py={2}
+      title={todo}
     >
-      <Box as={NavLink} to="/">
+      <Box as={NavLink} to={`/user/todo/tasks/${todoId}`}>
         <HStack align={"center"}>
           <Heading size="md" mr={1}>
             {todo}

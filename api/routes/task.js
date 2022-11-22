@@ -66,7 +66,6 @@ router.put(
 // Get single Task
 /* 
  expect-
- body: task
  header: Bearer token
  url: profileId, todoId
 */
@@ -78,10 +77,9 @@ router.get(
   getTask
 );
 
-// Get all single
+// Get all Task
 /* 
    expect-
-   body: task
    header: Bearer token
    url: profileId, todoId
 */

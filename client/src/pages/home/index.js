@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 import Todocard from "../../components/card/Todocard";
-import Navbar from "../../components/navbar";
+import Navbar from "../../components/navbar/Topbar";
 // Api helper
-import { isAuthenticate } from "../apiHelper/auth";
-import { getTodos } from "../apiHelper/todo";
+import { isAuthenticate } from "../../apiHelper/auth";
+import { getTodos } from "../../apiHelper/todo";
 // Chakra ui
 import {
   Card,
@@ -47,13 +47,14 @@ const Home = () => {
           <CardBody p={0}>
             <Stack divider={<StackDivider />}>
               {todos?.map((values, index) => {
-                const { todo, createdAt, tasks } = values;
+                const { todo, createdAt, tasks, _id } = values;
                 return (
                   <Todocard
                     key={index}
                     todo={todo}
                     date={formateDate(createdAt)}
                     task={tasks?.length}
+                    todoId={_id}
                   />
                 );
               })}
