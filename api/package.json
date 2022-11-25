@@ -4,8 +4,7 @@
   "description": "This is a todo app",
   "main": "index.js",
   "scripts": {
-    "node": "index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "keywords": [
     "Awesome"

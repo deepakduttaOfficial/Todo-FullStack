@@ -3,6 +3,7 @@ import {
   Box,
   CloseButton,
   Flex,
+  Progress,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -12,24 +13,30 @@ import { isAuthenticate, signout } from "../../apiHelper/auth";
 import { TodoContext } from "../../context/todo";
 import NavItem from "../../components/navbar/NavItem";
 import { toast, ToastContainer } from "react-toastify";
+import { TaskContext } from "../../context/task";
 
 const SidetodoBar = ({ onClose, display }) => {
   const [todos, setTodos] = useState([]);
+  const [todoLoading, setTodoLoading] = useState(false);
   const { refreshTodo } = useContext(TodoContext);
+  const { refreshTask } = useContext(TaskContext);
   const navigate = useNavigate();
   const textColoe = useColorModeValue("gray.500", "gray.400");
   useEffect(() => {
+    setTodoLoading(true);
     getTodos(isAuthenticate()?.token).then((response) => {
       if (!response.error) {
         setTodos(response.todos);
+        setTodoLoading(false);
       } else {
         toast.error(`Something went worng`, { theme: "dark", autoClose: 2000 });
+        setTodoLoading(false);
         signout(() => {
           navigate("/signin");
         });
       }
     });
-  }, [refreshTodo, navigate]);
+  }, [refreshTodo, refreshTask]);
   return (
     <>
       <ToastContainer />
@@ -70,6 +77,9 @@ const SidetodoBar = ({ onClose, display }) => {
             onClick={onClose}
           />
         </Flex>
+        {todoLoading && (
+          <Progress size="xs" isIndeterminate hasStripe value={80} />
+        )}
         {todos?.map((values, index) => (
           <NavItem key={index} id={values._id} onClose={onClose}>
             <Text flexGrow={1}>

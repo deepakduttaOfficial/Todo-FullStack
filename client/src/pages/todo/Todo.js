@@ -30,7 +30,7 @@ const Todo = () => {
     error: false,
     success: false,
   });
-  const { todo } = values;
+  const { todo, loading } = values;
   const handleChange = (name) => (e) => {
     setValues({
       ...values,
@@ -106,8 +106,9 @@ const Todo = () => {
             <Button
               colorScheme="blue"
               mr={3}
-              disabled={todo.length === 0}
+              disabled={todo.length === 0 || loading}
               onClick={handleClick}
+              isLoading={loading}
             >
               Save
             </Button>

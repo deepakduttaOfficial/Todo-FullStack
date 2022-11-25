@@ -17,6 +17,7 @@ import {
   Container,
   Divider,
   Image,
+  Skeleton,
 } from "@chakra-ui/react";
 
 // Create another date formate function
@@ -28,14 +29,19 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [todos, setTodos] = useState([]);
   const { refreshTodo } = useContext(TodoContext);
+  const [todoLoading, setTodoLoading] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
+    setTodoLoading(true);
     isAuthenticate() &&
       getTodos(isAuthenticate()?.token).then((response) => {
         if (!response.error) {
           setTodos(response.todos);
+          setTodoLoading(false);
         } else {
           toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
+          setTodoLoading(false);
           signout(() => {
             navigate("/signin");
           });
@@ -52,6 +58,10 @@ const Home = () => {
             <Heading size="md">All Todos</Heading>
           </CardHeader>
           <Divider />
+          {todoLoading &&
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((index) => {
+              return <Skeleton height="70px" key={index} mt={1} />;
+            })}
           <CardBody p={0}>
             <Stack divider={<StackDivider />}>
               {todos?.map((values, index) => {
@@ -69,7 +79,9 @@ const Home = () => {
             </Stack>
           </CardBody>
         </Card>
-        {todos?.length === 0 && <Image src={noTodo} alt="No todo found" />}
+        {!todoLoading && todos?.length === 0 && (
+          <Image src={noTodo} alt="No todo found" />
+        )}
       </Container>
     </>
   );

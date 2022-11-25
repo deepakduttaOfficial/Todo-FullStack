@@ -5,6 +5,7 @@ import {
   Divider,
   HStack,
   Image,
+  Progress,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
@@ -17,7 +18,7 @@ import { isAuthenticate } from "../../apiHelper/auth";
 import { toast } from "react-toastify";
 import EditTodo from "../todo/EditTodo";
 import Taskcard from "../../components/card/Taskcard";
-import { getTasks, removeTask } from "../../apiHelper/task";
+import { getTasks } from "../../apiHelper/task";
 import { formateDate, formateTime } from "../../components/js/date";
 import { TaskContext } from "../../context/task";
 import RemoveTodo from "../todo/RemoveTodo";
@@ -29,6 +30,7 @@ const Alltask = () => {
   const { refreshTodo } = useContext(TodoContext);
   const { token, data } = isAuthenticate();
   const [value, setValues] = useState({});
+  const [taskLoading, setTaskLoading] = useState(false);
   // Get single todo name
   useEffect(() => {
     getTodo(token, data._id, todoId).then((response) => {
@@ -42,31 +44,19 @@ const Alltask = () => {
   const { todo } = value;
   // Get all task todo wise
   const [tasks, setTasks] = useState([]);
-  const { refreshTask, setRefreshTask } = useContext(TaskContext);
+  const { refreshTask } = useContext(TaskContext);
   useEffect(() => {
+    setTaskLoading(true);
     getTasks(token, data._id, todoId).then((response) => {
       if (!response.error) {
+        setTaskLoading(false);
         setTasks(response.tasks);
       } else {
+        setTaskLoading(false);
         toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
       }
     });
   }, [refreshTodo, todoId, token, data._id, refreshTask]);
-  // Remove task
-  const isRemove = (taskId) => {
-    removeTask(token, data._id, taskId).then((response) => {
-      if (!response.error) {
-        toast.success(`${response.message}`, {
-          theme: "dark",
-          autoClose: 2000,
-        });
-        setRefreshTask(!refreshTask);
-      } else {
-        toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
-        setRefreshTask(!refreshTask);
-      }
-    });
-  };
 
   return (
     <Wrapper>
@@ -86,6 +76,9 @@ const Alltask = () => {
           </Center>
           <CreateTask />
         </HStack>
+        {taskLoading && (
+          <Progress size="xs" isIndeterminate hasStripe value={80} />
+        )}
       </Box>
       <Box py={3} px={5}>
         <Card>
@@ -97,16 +90,13 @@ const Alltask = () => {
                 task={task}
                 date={formateDate(createdAt)}
                 time={formateTime(createdAt)}
-                isRemove={() => {
-                  isRemove(_id);
-                }}
                 taskId={_id}
                 index={index + 1}
               />
             );
           })}
         </Card>
-        {tasks?.length === 0 && (
+        {!taskLoading && tasks?.length === 0 && (
           <Image src={noTodo} alt="No Task found" mt={10} />
         )}
       </Box>
