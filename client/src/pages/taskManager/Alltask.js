@@ -1,4 +1,12 @@
-import { Box, HStack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Center,
+  Divider,
+  HStack,
+  Image,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import Wrapper from "../todo/Wrapper";
 
@@ -8,14 +16,20 @@ import { TodoContext } from "../../context/todo";
 import { isAuthenticate } from "../../apiHelper/auth";
 import { toast } from "react-toastify";
 import EditTodo from "../todo/EditTodo";
+import Taskcard from "../../components/card/Taskcard";
+import { getTasks, removeTask } from "../../apiHelper/task";
+import { formateDate, formateTime } from "../../components/js/date";
+import { TaskContext } from "../../context/task";
+import RemoveTodo from "../todo/RemoveTodo";
+import CreateTask from "./CreateTask";
+import noTodo from "../../images/ontodo.svg";
 
 const Alltask = () => {
   const { todoId } = useParams();
   const { refreshTodo } = useContext(TodoContext);
   const { token, data } = isAuthenticate();
-
   const [value, setValues] = useState({});
-
+  // Get single todo name
   useEffect(() => {
     getTodo(token, data._id, todoId).then((response) => {
       if (!response.error) {
@@ -25,8 +39,34 @@ const Alltask = () => {
       }
     });
   }, [refreshTodo, todoId, token, data._id]);
-
   const { todo } = value;
+  // Get all task todo wise
+  const [tasks, setTasks] = useState([]);
+  const { refreshTask, setRefreshTask } = useContext(TaskContext);
+  useEffect(() => {
+    getTasks(token, data._id, todoId).then((response) => {
+      if (!response.error) {
+        setTasks(response.tasks);
+      } else {
+        toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
+      }
+    });
+  }, [refreshTodo, todoId, token, data._id, refreshTask]);
+  // Remove task
+  const isRemove = (taskId) => {
+    removeTask(token, data._id, taskId).then((response) => {
+      if (!response.error) {
+        toast.success(`${response.message}`, {
+          theme: "dark",
+          autoClose: 2000,
+        });
+        setRefreshTask(!refreshTask);
+      } else {
+        toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
+        setRefreshTask(!refreshTask);
+      }
+    });
+  };
 
   return (
     <Wrapper>
@@ -38,11 +78,38 @@ const Alltask = () => {
         top={0}
         zIndex={"2"}
       >
-        <HStack p={5}>
+        <HStack p={4}>
           <EditTodo todoName={todo} />
+          <RemoveTodo />
+          <Center height="30px" ml={3}>
+            <Divider orientation="vertical" />
+          </Center>
+          <CreateTask />
         </HStack>
       </Box>
-      <Box py={3} px={5}></Box>
+      <Box py={3} px={5}>
+        <Card>
+          {tasks?.map((values, index) => {
+            const { task, _id, createdAt } = values;
+            return (
+              <Taskcard
+                key={index}
+                task={task}
+                date={formateDate(createdAt)}
+                time={formateTime(createdAt)}
+                isRemove={() => {
+                  isRemove(_id);
+                }}
+                taskId={_id}
+                index={index + 1}
+              />
+            );
+          })}
+        </Card>
+        {tasks?.length === 0 && (
+          <Image src={noTodo} alt="No Task found" mt={10} />
+        )}
+      </Box>
     </Wrapper>
   );
 };

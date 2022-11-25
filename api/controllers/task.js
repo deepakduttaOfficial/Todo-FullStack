@@ -119,7 +119,7 @@ exports.removeTask = async (req, res) => {
       .status(200)
       .json({ success: true, message: `Task removed successfully` });
   } catch (error) {
-    return res.status(500).json({ error: `Something went wrong${error}` });
+    return res.status(500).json({ error: `Something went wrong` });
   }
   //
 };

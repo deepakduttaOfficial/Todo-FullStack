@@ -16,10 +16,19 @@ exports.getProfileById = async (req, res, next, id) => {
   }
 };
 
-exports.isSignin = expressjwt({
-  secret: COOKIEE_SIGNIN_TOKEN,
-  algorithms: ["HS256"],
-});
+exports.isSignin = () => {
+  return [
+    expressjwt({
+      secret: COOKIEE_SIGNIN_TOKEN,
+      algorithms: ["HS256"],
+    }),
+    function (err, req, res, next) {
+      return res
+        .status(err.status)
+        .json({ error: "Login your account to countinue..." });
+    },
+  ];
+};
 
 exports.isAuthenticate = async (req, res, next) => {
   try {

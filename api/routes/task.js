@@ -34,7 +34,7 @@ router.param("todoId", getTodoById);
 */
 router.post(
   "/task/create/:profileId/:todoId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTodoCreatedByUser,
   body("task", "task is required").notEmpty(),
@@ -53,7 +53,7 @@ router.post(
 */
 router.put(
   "/task/update/:profileId/:taskId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTaskCreatedByUser,
   body("task", "task is required").notEmpty(),
@@ -71,7 +71,7 @@ router.put(
 */
 router.get(
   "/task/get/:profileId/:taskId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTaskCreatedByUser,
   getTask
@@ -85,7 +85,7 @@ router.get(
 */
 router.get(
   "/tasks/get/:profileId/:todoId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTodoCreatedByUser,
   getTasksInsideTodo
@@ -100,7 +100,7 @@ router.get(
 */
 router.delete(
   "/task/remove/:profileId/:taskId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTaskCreatedByUser,
   removeTask

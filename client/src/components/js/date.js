@@ -14,10 +14,18 @@ const month = [
 ];
 
 export const formateDate = (createdAt) => {
-  const createdTodo = new Date(createdAt);
+  const d = new Date(createdAt);
 
-  const mon = month[createdTodo.getMonth()];
-  const day = createdTodo.getDate();
-  const year = createdTodo.getFullYear();
+  const mon = month[d.getMonth()];
+  const day = d.getDate();
+  const year = d.getFullYear();
   return `${mon} ${day}, ${year}`;
+};
+
+export const formateTime = (ms) => {
+  // const time = new Date(createdAt);
+
+  // console.log(time.getTime() - new Date(Date.now()).getTime());
+
+  return new Date(ms).toISOString().slice(11, 19);
 };

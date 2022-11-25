@@ -31,7 +31,7 @@ router.param("todoId", getTodoById);
 */
 router.post(
   "/todo/create/:profileId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   body("todo", "Todo is required").notEmpty(),
   body("todo", "Todo must be at least 2 chars long").isLength({
@@ -49,7 +49,7 @@ router.post(
 */
 router.put(
   "/todo/update/:profileId/:todoId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTodoCreatedByUser,
   body("todo", "todo is required").notEmpty(),
@@ -67,7 +67,7 @@ router.put(
 */
 router.get(
   "/todo/get/:profileId/:todoId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTodoCreatedByUser,
   getTodo
@@ -78,7 +78,7 @@ router.get(
    expect-
    header: Bearer token
 */
-router.get("/todos/get", isSignin, getTodos);
+router.get("/todos/get", isSignin(), getTodos);
 
 // remove Todo
 /* 
@@ -88,7 +88,7 @@ router.get("/todos/get", isSignin, getTodos);
 */
 router.delete(
   "/todo/remove/:profileId/:todoId",
-  isSignin,
+  isSignin(),
   isAuthenticate,
   isTodoCreatedByUser,
   removeTodo

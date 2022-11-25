@@ -4,7 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Todocard from "../../components/card/Todocard";
 import Navbar from "../../components/navbar/Topbar";
 // Api helper
-import { isAuthenticate } from "../../apiHelper/auth";
+import { isAuthenticate, signout } from "../../apiHelper/auth";
 import { getTodos } from "../../apiHelper/todo";
 // Chakra ui
 import {
@@ -16,24 +16,32 @@ import {
   StackDivider,
   Container,
   Divider,
+  Image,
 } from "@chakra-ui/react";
 
 // Create another date formate function
 import { formateDate } from "../../components/js/date";
 import { TodoContext } from "../../context/todo";
-
+// Image
+import noTodo from "../../images/ontodo.svg";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [todos, setTodos] = useState([]);
   const { refreshTodo } = useContext(TodoContext);
+  const navigate = useNavigate();
   useEffect(() => {
-    getTodos(isAuthenticate()?.token).then((response) => {
-      if (!response.error) {
-        setTodos(response.todos);
-      } else {
-        toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
-      }
-    });
-  }, [refreshTodo]);
+    isAuthenticate() &&
+      getTodos(isAuthenticate()?.token).then((response) => {
+        if (!response.error) {
+          setTodos(response.todos);
+        } else {
+          toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
+          signout(() => {
+            navigate("/signin");
+          });
+        }
+      });
+  }, [refreshTodo, navigate]);
   return (
     <>
       <ToastContainer />
@@ -61,6 +69,7 @@ const Home = () => {
             </Stack>
           </CardBody>
         </Card>
+        {todos?.length === 0 && <Image src={noTodo} alt="No todo found" />}
       </Container>
     </>
   );

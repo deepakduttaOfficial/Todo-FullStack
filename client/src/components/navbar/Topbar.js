@@ -22,6 +22,9 @@ const Topbar = ({ onOpen }) => {
       px={4}
       borderBottom="1px"
       borderBottomColor={useColorModeValue("gray.300", "gray.700")}
+      position={!onOpen && "sticky"}
+      top={0}
+      zIndex={"overlay"}
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         {onOpen && (
@@ -41,6 +44,7 @@ const Topbar = ({ onOpen }) => {
           fontSize="2xl"
           fontFamily="monospace"
           fontWeight="bold"
+          ml={4}
         >
           Logo
         </Text>

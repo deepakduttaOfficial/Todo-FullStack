@@ -6,9 +6,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getTodos } from "../../apiHelper/todo";
-import { isAuthenticate } from "../../apiHelper/auth";
+import { isAuthenticate, signout } from "../../apiHelper/auth";
 import { TodoContext } from "../../context/todo";
 import NavItem from "../../components/navbar/NavItem";
 import { toast, ToastContainer } from "react-toastify";
@@ -16,15 +16,20 @@ import { toast, ToastContainer } from "react-toastify";
 const SidetodoBar = ({ onClose, display }) => {
   const [todos, setTodos] = useState([]);
   const { refreshTodo } = useContext(TodoContext);
+  const navigate = useNavigate();
+  const textColoe = useColorModeValue("gray.500", "gray.400");
   useEffect(() => {
     getTodos(isAuthenticate()?.token).then((response) => {
       if (!response.error) {
         setTodos(response.todos);
       } else {
         toast.error(`Something went worng`, { theme: "dark", autoClose: 2000 });
+        signout(() => {
+          navigate("/signin");
+        });
       }
     });
-  }, [refreshTodo]);
+  }, [refreshTodo, navigate]);
   return (
     <>
       <ToastContainer />
@@ -67,7 +72,12 @@ const SidetodoBar = ({ onClose, display }) => {
         </Flex>
         {todos?.map((values, index) => (
           <NavItem key={index} id={values._id} onClose={onClose}>
-            {values.todo}
+            <Text flexGrow={1}>
+              {values.todo.length > 5 ? values.todo : values.todo}
+            </Text>
+            <Text fontSize={["xs"]} color={textColoe}>
+              {values.tasks?.length}
+            </Text>
           </NavItem>
         ))}
       </Box>

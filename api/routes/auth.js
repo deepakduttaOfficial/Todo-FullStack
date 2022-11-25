@@ -43,7 +43,7 @@ router.post(
   signin
 );
 
-router.get("/logout", isSignin, logout);
+router.get("/logout", isSignin(), logout);
 /*****************************************/
 
 module.exports = router;

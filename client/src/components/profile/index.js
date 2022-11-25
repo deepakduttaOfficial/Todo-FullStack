@@ -12,11 +12,14 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
+import { signout } from "../../apiHelper/auth";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const navigate = useNavigate();
   return (
-    <Stack direction={"row"} spacing={7}>
+    <Stack direction={"row"} spacing={7} zIndex={"overlay"}>
       <Menu>
         <MenuButton
           as={Button}
@@ -50,9 +53,15 @@ const Profile = () => {
             </Text>
           </MenuItem>
           <MenuDivider />
-          <MenuItem>Your Servers</MenuItem>
-          <MenuItem>Account Settings</MenuItem>
-          <MenuItem>Logout</MenuItem>
+          <MenuItem
+            onClick={() => {
+              signout(() => {
+                navigate("/signin");
+              });
+            }}
+          >
+            Logout
+          </MenuItem>
         </MenuList>
       </Menu>
     </Stack>

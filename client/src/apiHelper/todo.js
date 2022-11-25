@@ -52,3 +52,16 @@ export const updateTodo = (profileId, todoId, data, token) => {
       return err.response.data;
     });
 };
+
+export const removeTodo = (token, profileId, todoId) => {
+  return axios
+    .delete(`${REACT_APP_API_KEY}/todo/remove/${profileId}/${todoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};

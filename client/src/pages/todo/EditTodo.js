@@ -65,7 +65,7 @@ const EditTodo = ({ todoName }) => {
   return (
     <>
       <ToastContainer />
-      {!isEditing && <Heading size={"md"}>{todoName}</Heading>}
+      {!isEditing && <Heading size={["xs", "sm", "md"]}>{todoName}</Heading>}
       <HStack>
         {isEditing ? (
           <>
