@@ -34,7 +34,7 @@ const Navbar = () => {
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <Box as={NavLink} to="/">
-          Logo
+          Todo
         </Box>
 
         <Flex alignItems={"center"}>

@@ -46,7 +46,7 @@ const Topbar = ({ onOpen }) => {
           fontWeight="bold"
           ml={4}
         >
-          Logo
+          Todo
         </Text>
 
         <Flex alignItems={"center"}>

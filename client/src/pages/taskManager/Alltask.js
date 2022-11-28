@@ -24,6 +24,8 @@ import { TaskContext } from "../../context/task";
 import RemoveTodo from "../todo/RemoveTodo";
 import CreateTask from "./CreateTask";
 import noTodo from "../../images/ontodo.svg";
+import Sort from "../../components/search/Sort";
+import SearchBar from "../../components/search/SearchBar";
 
 const Alltask = () => {
   const { todoId } = useParams();
@@ -31,6 +33,10 @@ const Alltask = () => {
   const { token, data } = isAuthenticate();
   const [value, setValues] = useState({});
   const [taskLoading, setTaskLoading] = useState(false);
+  // Sort
+  const [sort, setSort] = useState("1");
+  //  search
+  const [search, setSearch] = useState("");
   // Get single todo name
   useEffect(() => {
     getTodo(token, data._id, todoId).then((response) => {
@@ -47,7 +53,7 @@ const Alltask = () => {
   const { refreshTask } = useContext(TaskContext);
   useEffect(() => {
     setTaskLoading(true);
-    getTasks(token, data._id, todoId).then((response) => {
+    getTasks(token, data._id, todoId, sort, search).then((response) => {
       if (!response.error) {
         setTaskLoading(false);
         setTasks(response.tasks);
@@ -56,7 +62,19 @@ const Alltask = () => {
         toast.error(`${response.error}`, { theme: "dark", autoClose: 2000 });
       }
     });
-  }, [refreshTodo, todoId, token, data._id, refreshTask]);
+  }, [refreshTodo, todoId, token, data._id, refreshTask, sort, search]);
+
+  // Sort
+  const getValue = (val) => {
+    setSort(val);
+  };
+  //  search
+  const clickToSearch = (onClose) => {
+    onClose();
+  };
+  const searchChange = (e) => {
+    setSearch(e.target.value);
+  };
 
   return (
     <Wrapper>
@@ -75,6 +93,15 @@ const Alltask = () => {
             <Divider orientation="vertical" />
           </Center>
           <CreateTask />
+          <Center height="30px" ml={3}>
+            <Divider orientation="vertical" />
+          </Center>
+          <SearchBar
+            clickToSearch={clickToSearch}
+            searchChange={searchChange}
+            search={search}
+          />
+          <Sort sort={sort} getValue={getValue} />
         </HStack>
         {taskLoading && (
           <Progress size="xs" isIndeterminate hasStripe value={80} />

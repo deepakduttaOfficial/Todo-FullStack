@@ -1,11 +1,16 @@
 import axios from "axios";
 import { REACT_APP_API_KEY } from "../backend";
 
-export const getTasks = (token, profileId, todoId) => {
+export const getTasks = (token, profileId, todoId, sort = "1", search) => {
   return axios
-    .get(`${REACT_APP_API_KEY}/tasks/get/${profileId}/${todoId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    .get(
+      `${REACT_APP_API_KEY}/tasks/get/${profileId}/${todoId}?sort=${sort}&${
+        search && `q=${search}`
+      }`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     .then((response) => {
       return response.data;
     })

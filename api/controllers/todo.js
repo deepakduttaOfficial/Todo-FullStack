@@ -89,12 +89,17 @@ exports.getTodo = (req, res) => {
 // Get all Todos
 exports.getTodos = async (req, res) => {
   try {
-    const todos = await Todo.find({ user: req.auth._id });
+    const { sort, q } = req.query;
+    const search = q ? { todo: new RegExp(q, "i") } : {};
+    const todos = await Todo.find(search)
+      .where({ user: req.auth._id })
+      .sort({ createdAt: sort });
     return res.status(201).json({
       success: true,
       todos,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };

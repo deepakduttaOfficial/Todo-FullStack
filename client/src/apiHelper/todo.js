@@ -14,11 +14,14 @@ export const createTodo = (profileId, data, token) => {
     });
 };
 
-export const getTodos = (token) => {
+export const getTodos = (token, sort = "1", search) => {
   return axios
-    .get(`${REACT_APP_API_KEY}/todos/get`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    .get(
+      `${REACT_APP_API_KEY}/todos/get?sort=${sort}&${search && `q=${search}`}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     .then((response) => {
       return response.data;
     })
